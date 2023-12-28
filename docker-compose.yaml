@@ -1,0 +1,85 @@
+version: '3.8'
+services:
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:4.4.27-rc0-focal
+    restart: always
+    ports:
+      - '27017:27017'
+    deploy:
+        replicas: 1
+    networks: 
+      - app-network
+    command: --wiredTigerCacheSizeGB 1.5 
+    volumes:
+      - mongodata:/data/db
+
+  redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data
+      - ./redis.conf:/mnt/c/Users/"moshe ilan"/Downloads
+  
+  server: 
+    container_name: server
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: ./server/app/package.json
+    ports: 
+      - "4000:4000"
+    networks:
+      - app-network
+    environment:
+      CONNECTION_STRING: mongodb://mongodb:27017/myGroopUpApp
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - ./server/app/dist:/server/dist
+    depends_on:
+      - redis
+      - mongodb
+
+  client:
+    container_name: client
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    develop:
+      watch:
+      - action: rebuild
+        path: ./client/app/package.json
+    ports:
+      - 8000:8000
+    tty: true
+    networks:
+      - app-network 
+    volumes:
+      - type: bind
+        source: ./client/app/src
+        target: /client/src
+    depends_on:
+      - redis
+      - mongodb
+      - server
+
+networks: 
+  app-network:
+
+volumes:
+    cache:
+      driver: local
+    mongodata:

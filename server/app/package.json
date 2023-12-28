@@ -1,0 +1,40 @@
+{
+  "dependencies": {
+    "@apollo/sandbox": "^2.5.1",
+    "@apollo/server": "^4.9.5",
+    "apollo-server": "^3.13.0",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "graphql": "^16.8.1",
+    "graphql-redis-subscriptions": "^2.6.0",
+    "graphql-subscriptions": "^2.0.0",
+    "ioredis": "^5.3.2",
+    "moment": "^2.29.4",
+    "mongoose": "^8.0.3",
+    "morgan": "^1.10.0",
+    "redis": "^4.6.11",
+    "ws": "^8.15.0"
+  },
+  "type": "module",
+  "name": "server",
+  "version": "1.0.0",
+  "main": "./dist/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc --watch",
+    "start:dev": "nodemon --legacy-watch dist/server.js",
+    "start:watch": "nodemon --legacy-watch --esm src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/morgan": "^1.9.9",
+    "@types/ws": "^8.5.10",
+    "nodemon": "^3.0.2",
+    "npm-run-all": "^4.1.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3"
+  }
+}
