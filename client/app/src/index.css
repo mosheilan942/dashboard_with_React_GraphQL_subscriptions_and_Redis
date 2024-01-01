@@ -85,6 +85,10 @@ p.MuiTypography-root.MuiTypography-body2.MuiTypography-alignCenter.css-ijul54-Mu
 }
 
 /* signIn page */
+body{
+  margin: 0;
+}
+
 header.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation4.MuiAppBar-root.MuiAppBar-colorPrimary.MuiAppBar-positionStatic.css-hip9hq-MuiPaper-root-MuiAppBar-root {
   position: fixed;
   z-index: 0;

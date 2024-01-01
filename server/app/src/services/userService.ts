@@ -1,10 +1,18 @@
 import { User } from "../mongoose/mongooseSchema.js";
-import { sandUserToDbDal } from "../dal/userDal.js";
+import { sandUserToDbDal, getUserFromDbDal } from "../dal/userDal.js";
+import { hashPassword, comparePassword } from "../utils/bcrypt.js";
 
-function sandUserToDbService (user:User) {
+async function sandUserToDbService (user:User) {
+    user.password = await hashPassword(user.password)
     const res = sandUserToDbDal(user)
     if (res) return res
-    throw new Error()
+    throw new Error("error in sand user - service")
 }
 
-export  { sandUserToDbService }
+async function getUserFromDbService(user:User) {
+    const res = getUserFromDbDal(user)
+    if (res) return res
+    throw new Error("error in get user - service")
+}
+
+export  { sandUserToDbService, getUserFromDbService }

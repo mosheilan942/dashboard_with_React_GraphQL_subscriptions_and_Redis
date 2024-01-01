@@ -20,7 +20,18 @@ const port = 4000;
 
 const app = express();
 
-app.use(cors())
+interface MyContext {
+    // we'd define the properties a user should have
+    // in a separate user interface (e.g., email, id, url, etc.)
+    user: String;
+  }
+
+const corsOptions = {
+    origin: "http://localhost:8000",
+    credentials: true 
+};
+
+app.use(cors(corsOptions))
 app.use(morgan("dev"))
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -55,7 +66,9 @@ const wsServerCleanup = useServer({ schema }, wsServer);
 (async function () {
     // starting the apollo server to expose endoint to client
     await apolloServer.start();
-    app.use("/graphql", bodyParser.json(), expressMiddleware(apolloServer));
+    app.use("/graphql", bodyParser.json(), expressMiddleware(apolloServer, {
+        context: async ({ req }) => ({ token: req.headers.cookie }),
+    }));
 })();
 
 

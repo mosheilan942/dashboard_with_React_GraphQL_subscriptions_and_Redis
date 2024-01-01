@@ -25,7 +25,11 @@ import resolvers from "./graphql/resolvers.js";
 import checkConnection from "./mongoose/mongooseConnection.js";
 const port = 4000;
 const app = express();
-app.use(cors());
+const corsOptions = {
+    origin: "http://localhost:8000",
+    credentials: true
+};
+app.use(cors(corsOptions));
 app.use(morgan("dev"));
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const httpServer = createServer(app);
@@ -59,7 +63,9 @@ const wsServerCleanup = useServer({ schema }, wsServer);
     return __awaiter(this, void 0, void 0, function* () {
         // starting the apollo server to expose endoint to client
         yield apolloServer.start();
-        app.use("/graphql", bodyParser.json(), expressMiddleware(apolloServer));
+        app.use("/graphql", bodyParser.json(), expressMiddleware(apolloServer, {
+            context: ({ req }) => __awaiter(this, void 0, void 0, function* () { return ({ token: req.headers.cookie }); }),
+        }));
     });
 })();
 httpServer.listen(port, () => {

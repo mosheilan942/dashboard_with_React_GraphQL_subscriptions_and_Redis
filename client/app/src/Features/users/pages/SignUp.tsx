@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -30,21 +31,16 @@ export default function SignUp() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
         const user = {
-            firstName:data.get('firstName'),
-            lastName:data.get('lastName'),
-            email:data.get('email'),
-            password:data.get('password')
-        }
+            ...Object.fromEntries(data), // Convert FormData to an object
+        };
+        console.log(Object.fromEntries(data));
+        // console.log(user);
         setUser({ variables: { input: user } })
     };
 
     return (
-        <>
+    
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -133,6 +129,6 @@ export default function SignUp() {
                 </Box>
                 <Copyright sx={{ mt: 4, mb: 4 }} />
             </Container>
-        </>
+        
     );
 }

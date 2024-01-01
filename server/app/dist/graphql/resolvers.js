@@ -7,10 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { set } from "../utils/redis.js";
+import { set } from "../redis/redis.js";
 import pubsub from "../pubsub/pubsub.js";
-import { cpuData, } from "../utils/generator.js";
-import { sandUserToDbController } from "../controllers/userControllers.js";
+import { sandUserToDbController, getUserFromDb } from "../controllers/userControllers.js";
+import { GraphQLError } from 'graphql';
 const COMPONENTS = {
     CPU: "cpu",
     TRAFFIC: "traffic",
@@ -26,12 +26,22 @@ const publishRandomData = (generator, component) => __awaiter(void 0, void 0, vo
 });
 const resolvers = {
     Query: {
-        getUser: () => ({ name: "vbtuv", email: "4g4", password: "t4tbt" }),
+        getUser: (_, args, contextValue) => __awaiter(void 0, void 0, void 0, function* () {
+            console.log("args.input", args.user);
+            const res = yield getUserFromDb(args.user);
+            return res;
+        })
     },
     Mutation: {
-        cpu: () => publishRandomData(cpuData, COMPONENTS.CPU),
-        setUser: (_, args) => {
+        // cpu: () => publishRandomData(cpuData, COMPONENTS.CPU),
+        setUser: (_, args, contextValue) => {
             sandUserToDbController(args.input);
+            console.log("contextValue.token", contextValue.token);
+            if (contextValue.token) {
+                throw new GraphQLError('not admin!', {
+                    extensions: { code: 'UNAUTHENTICATED' },
+                });
+            }
             return args.input;
         }
     },

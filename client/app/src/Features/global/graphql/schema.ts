@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import UserTypeGraphql from "./typesGraphql";
+import { userMoutations } from "../../users/services/userGraphqlApiService";
 
 
 const QUERY = gql`
@@ -20,15 +21,7 @@ query getUser {
 
 
 const MUTATION = gql`
-
- mutation SetUser($input: setUserr) {
-  setUser(input: $input) {
-    firstName
-    lastName
-    email
-    password
-  }
-}
+${userMoutations}
 `
 
 const SUBSCRIPTION = gql`

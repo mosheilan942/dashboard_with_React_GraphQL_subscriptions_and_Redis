@@ -26,7 +26,7 @@ const schema = gql `
   }
   type Query {
     cpu: CPU
-    getUser: getUserr
+    getUser (user: setUserr!): getUserr
     distribution: [Distribution]
     messages: [Message]
   }

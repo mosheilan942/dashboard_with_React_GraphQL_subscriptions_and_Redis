@@ -1,4 +1,4 @@
-import { get, set } from "../utils/redis.js";
+import { get, set } from "../redis/redis.js";
 import pubsub from "../pubsub/pubsub.js";
 import {
     cpuData,
@@ -6,8 +6,9 @@ import {
     messageData,
     trafficData,
 } from "../utils/generator.js";
-import { sandUserToDbController } from "../controllers/userControllers.js";
+import { sandUserToDbController, getUserFromDb } from "../controllers/userControllers.js";
 import { User } from "../mongoose/mongooseSchema.js";
+import { GraphQLError } from 'graphql';
 
 
 
@@ -20,7 +21,7 @@ const COMPONENTS = {
 };
 
 
-const publishRandomData = async (generator:any, component:any) => {
+const publishRandomData = async (generator: any, component: any) => {
     const data = generator();
     pubsub.publish(component, { [component]: data });
     await set(component, data);
@@ -31,12 +32,22 @@ const publishRandomData = async (generator:any, component:any) => {
 
 const resolvers = {
     Query: {
-        getUser: () => ({name:"vbtuv", email:"4g4", password: "t4tbt"}),
+        getUser: async (_: any, args: { user: User }, contextValue: any) => {
+           console.log("args.input", args.user);
+           const res = await getUserFromDb(args.user)
+           return res
+        }
     },
     Mutation: {
-        cpu: () => publishRandomData(cpuData, COMPONENTS.CPU),
-        setUser: (_:any, args: {input:User}) =>  {
+        // cpu: () => publishRandomData(cpuData, COMPONENTS.CPU),
+        setUser: (_: any, args: { input: User }, contextValue: any) => {
             sandUserToDbController(args.input)
+            console.log("contextValue.token", contextValue.token);
+            if (contextValue.token!) {
+                throw new GraphQLError('not admin!', {
+                    extensions: { code: 'UNAUTHENTICATED' },
+                });
+            }
             return args.input
         }
     },
