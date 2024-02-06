@@ -1,37 +1,57 @@
-import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import React from "react";
+import styled from "styled-components";
+
+const Card = styled.div`
+  height: 550px;
+`;
+
+const Media = styled.img`
+  height: 400px;
+  object-fit: cover;
+`;
+
+const Content = styled.div``;
+
+const Title = styled.h5`
+  margin-bottom: 0.5rem;
+`;
+
+const Text = styled.p`
+  color: #6c757d;
+`;
+
+const Actions = styled.div``;
+
+const Button = styled.button`
+  background-color: transparent;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 function DetailsCard() {
   return (
-    <Card sx={{height:"550px"}}>
-      <CardMedia
-        component="img"
-        alt="green iguana"
-        height="400"
-        src="http://tinyurl.com/43twcvpy"
-        // sx={{ width:"1144px" }}
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          Lizard
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
+    <Card>
+      <Media src="http://tinyurl.com/43twcvpy" alt="green iguana" />
+      <Content>
+        <Title>Lizard</Title>
+        <Text>
           Lizards are a widespread group of squamate reptiles, with over 6,000
           species, ranging across all continents except Antarctica
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
-      </CardActions>
+        </Text>
+      </Content>
+      <Actions>
+        <Button>Share</Button>
+        <Button>Learn More</Button>
+      </Actions>
     </Card>
   );
 }
 
-
-export { DetailsCard }
+export default DetailsCard;

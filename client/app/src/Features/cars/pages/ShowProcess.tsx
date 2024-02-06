@@ -3,7 +3,7 @@ import Box from '@mui/system/Box';
 import Grid from '@mui/system/Unstable_Grid';
 import styled from '@mui/system/styled';
 
-import { DetailsCard } from "../component/DetailsCard";
+import DetailsCard from "../component/DetailsCard";
 import Stages  from "../component/Stages";
 
 const Item = styled('div')(({ theme }) => ({
